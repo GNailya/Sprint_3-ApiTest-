@@ -25,8 +25,8 @@ public class CourierLoginTest {
     @After
     public void tearDown() {
 
-        courierClient.delete(courierId);
-    }
+       courierClient.delete(courierId);
+   }
 
     @Test
     @DisplayName("Успешная авторизация")
@@ -37,6 +37,7 @@ public class CourierLoginTest {
 
         assertThat (statusCode, equalTo(200));
         assertThat(courierId, notNullValue());
+
     }
 
     @Test
@@ -46,10 +47,10 @@ public class CourierLoginTest {
         ValidatableResponse login = courierClient.login(new CourierCredentials(nullLogin, courier.password));
 
         int statusCode = login.extract().statusCode();
-        courierId = login.extract().path("message");
+        String message = login.extract().path("message");
 
         assertThat (statusCode, equalTo(400));
-        assertThat(courierId, equalTo("Недостаточно данных для входа"));
+        assertThat(message, equalTo("Недостаточно данных для входа"));
     }
 
     @Test
@@ -59,10 +60,10 @@ public class CourierLoginTest {
         ValidatableResponse login = courierClient.login(new CourierCredentials(courier.login , nullPassword));
 
         int statusCode = login.extract().statusCode();
-        courierId = login.extract().path("message");
+        String message = login.extract().path("message");
 
         assertThat (statusCode, equalTo(400));
-        assertThat(courierId, equalTo("Недостаточно данных для входа"));
+        assertThat(message, equalTo("Недостаточно данных для входа"));
     }
 
     @Test
@@ -72,10 +73,10 @@ public class CourierLoginTest {
         ValidatableResponse login= courierClient.login(new CourierCredentials(courier.login, noPassword));
 
         int statusCode = login.extract().statusCode();
-        courierId = login.extract().path("message");
+        String message = login.extract().path("message");
 
         assertThat (statusCode, equalTo(404));
-        assertThat(courierId, equalTo("Учетная запись не найдена"));
+        assertThat(message, equalTo("Учетная запись не найдена"));
     }
 
 
@@ -86,10 +87,10 @@ public class CourierLoginTest {
         ValidatableResponse login = courierClient.login(new CourierCredentials(noLogin, courier.password));
 
         int statusCode = login.extract().statusCode();
-        courierId = login.extract().path("message");
+        String message = login.extract().path("message");
 
         assertThat (statusCode, equalTo(404));
-        assertThat(courierId, equalTo("Учетная запись не найдена"));
+        assertThat(message, equalTo("Учетная запись не найдена"));
     }
 }
 
