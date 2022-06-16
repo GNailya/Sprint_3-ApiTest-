@@ -1,4 +1,6 @@
 import io.qameta.allure.junit4.DisplayName;
+import io.restassured.response.ValidatableResponse;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.List;
@@ -6,13 +8,18 @@ import java.util.List;
 import static org.junit.Assert.assertFalse;
 
 public class OrderListTest {
-    OrderList orderList = new OrderList();
+    private OrderClient orderClient;
+
+    @Before
+    public void setUp() {
+        orderClient = new OrderClient();
+    }
 
     @Test
     @DisplayName("Получаем список заказов")
     public void getOrderListTest() {
-        orderList.getOrderList();
-        List<Object> orders = orderList.response.then().extract().jsonPath().getList("orders");
+        ValidatableResponse response = orderClient.getOrderList();
+        List<Object> orders = response.extract().jsonPath().getList("orders");
         assertFalse(orders.isEmpty());
     }
 }

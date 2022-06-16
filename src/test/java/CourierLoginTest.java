@@ -9,11 +9,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.equalTo;
 
 
-public class CourierLoginTest {
+public class CourierLoginTest  {
     Courier courier = Courier.getRandom();
     CourierCredentials creds = CourierCredentials.from(courier);
     private CourierClient courierClient;
     private int courierId;
+
 
     @Before
     public void setUp() {
@@ -92,5 +93,20 @@ public class CourierLoginTest {
         assertThat (statusCode, equalTo(404));
         assertThat(message, equalTo("Учетная запись не найдена"));
     }
+
+    @Test
+    @DisplayName("Проверка при отсутствии поля с паролем")
+    public void courierLoginNotField() {
+        ValidatableResponse login  = new CourierClient().login(CourierCredentials.getCourierNotfield(courier));
+
+        int statusCode = login.extract().statusCode();
+        assertThat(statusCode, equalTo(400));
+
+        String message = login.extract().path("message");
+        assertThat(message, equalTo("Недостаточно данных для входа"));
+
+        //Баг: приходит 504 ошибка
+    }
+
 }
 
